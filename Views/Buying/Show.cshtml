@@ -1,0 +1,89 @@
+﻿@using FrostyBear.ViewModels;
+@using System.Globalization;
+@model dynamic;
+@{
+    CultureInfo us = new CultureInfo("en-US");
+}
+<div class="container">
+    @if (TempData["Errormessage"] != null)
+    {
+        <div class="alert alert-warning">@TempData["Errormessage"]</div>
+    }
+    <!--อ่านค่าจาก Model เป็น Object-->
+    @foreach (Buying master in Model.Master)
+    {
+        <div class="card bg-warning bg-opacity-50">
+            <div class="card-body">
+                <h4 class="card-title text-primary opacity-75">Buying Number @master.BuyId</h4>
+                <h5 class="card-subtitle mt-2 text-muted">
+                    Date @master.BuyDate.Value.ToString("yyyy-MMM-dd", us)
+                </h5>
+                <h5>
+                    Supplier @master.SupId-@ViewBag.SupName [@master.Saleman]
+                    &nbsp;Ref documents:@master.BuyDocId
+                </h5>
+                <div class="text-danger text-end">
+                    Number of products @master.BuyQty Total price @master.BuyMoney.Value.ToString("#,###.00")  Baht
+                </div>
+                <div class="text-secondary">
+                    note :@master.BuyRemark
+                </div>
+                <hr>
+                <a class="btn btn-danger" asp-controller="Buying" asp-action="Delete"
+                   asp-route-buyid="@master.BuyId" onclick=" return confirm('Confirm document deletion')">
+                    <i class="bi bi-file-earmark-excel"></i> Delete documents
+                </a>
+                <a class="btn btn-link float-end" asp-controller="Buying" asp-action="Index">
+                    Back to home page
+                </a>
+                <a class="btn btn-success float-end" asp-controller="Buying" asp-action="Edit"
+                   asp-route-buyid="@master.BuyId">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+
+<!--Detail Part-->
+<div class="container">
+    <table class="table mt-3  table-hover">
+        <tr class="bg-light">
+            <th>
+                <a asp-action="CreateDtl" asp-route-buyid="@ViewBag.theid"
+                   class="btn btn-primary">
+                    <i class="bi-plus-lg">Add Buying Order</i>
+                </a>
+            </th>
+            <th>Products</th>
+            <th></th>
+            <th class="text-end">Price</th>
+            <th class="text-center">Amount</th>
+            <th class="text-end">Total price</th>
+            <th></th>
+        </tr>
+        @{
+            var i = 0;
+        }
+        @foreach (BdVM detail in Model.Detail)
+        {
+            i++;
+            <tr>
+                <td>@i</td>
+                <td>@detail.PdId</td>
+                <td>@detail.PdName</td>
+                <td class="text-end">@detail.BdtlPrice </td>
+                <td class="text-center">@detail.BdtlQty</td>
+                <td class="text-end">@detail.BdtlMoney </td>
+                <td class="text-center">
+                    <a asp-controller="Buying" asp-action="DeleteDtl"
+                       asp-route-pdid="@detail.PdId" asp-route-buyid="@detail.BuyId"
+                       onclick=" return confirm('Confirm deletion of selected products.')">
+                        <i class="bi-x-lg text-danger">ลบ</i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

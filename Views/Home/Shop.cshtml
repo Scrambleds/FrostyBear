@@ -1,0 +1,132 @@
+﻿@model IEnumerable<FrostyBear.ViewModels.PdVM>
+<!--กำหนด @Model ซึ่งเป็น List-->
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@*
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage;
+    </div>
+}
+*@
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@{
+    var stext = ViewBag.stext;
+}
+
+<!--<h1>Frosty Bear</h1>-->
+<form method="post" asp-controller="Home" asp-action="Shop">
+    <div class="row justify-content-end">
+        <!-- Aligns the row content to the right -->
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <!-- Adjust the column width as needed -->
+            <div class="input-group">
+                <label for="autocompleteTextBox" class="input-group-text">Search</label>
+                <input type="search" class="form-control" id="autocompleteTextBox" name="stext" placeholder="Type your ice cream menu here..." aria-label="Search">
+                <button type="submit" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-xl-2 col-lg-3 col-md-12">
+            <div class="cardSidebar">
+                <article class="filter-group">
+                    <header class="cardSidebar-header">
+                        <a href="#" data-toggle="collapse" data-target="#collapse_aside1" data-abc="true" aria-expanded="true" class="">
+                            <i class="icon-control fa fa-chevron-down"></i>
+                            <h6 class="title">Categories </h6>
+                        </a>
+                    </header>
+                    <div class="filter-content collapse show" id="collapse_aside1" style="">
+                        <div class="cardSidebar-body">
+                            @if (ViewBag.FilterCategory != null && ViewBag.FilterCategory.Count > 0)
+                            {
+                                @foreach (var category in ViewBag.FilterCategory)
+                                {
+                                    <label class="form-check category-label">
+                                        <input type="checkbox" class="form-check-input" name="types" value="@category.PdtId" id="category-@category.PdtId" onclick="loadProducts('@category.PdtId')">
+                                        <span class="form-check-label">@category.PdtName</span>
+                                    </label>
+                                }
+                            }
+                            else
+                            {
+                                <p>No categories available.</p>
+                            }
+                        </div>
+                    </div>
+
+                </article>
+            </div>
+        </div>
+        <div class="col-xl-10 col-lg-8 col-md-12 col-sm-12">
+            <div id="product-list" class="row">
+                @{
+                    var modelList = Model.ToList();
+                }
+                @foreach (var item in modelList)
+                {
+                    var pdimg = "/images/" + item.ProductId + ".png";
+                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 mt-3 product-item">
+                        <div class="card px-3 py-3">
+                            <img src="@pdimg" class="card-img-top img-fluid object-fit-cover" style="height:30vh" alt="...">
+                            <hr />
+                            <div class="card-body">
+                                <h5 class="card-title">@item.ProductName</h5>
+                                <p class="card-subtitle text-muted">@item.BrandName</p>
+                                <a class="btn btn-link" asp-controller="Home" asp-action="Show" asp-route-id="@item.ProductId">Show details</a>
+                                <a asp-controller="Cart" asp-action="AddDtl" asp-route-pdid="@item.ProductId" class="btn btn-danger float-end">
+                                    <i class="bi bi-cart-plus-fill"></i>
+                                    <i class="bi bi-cart"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadProducts(categoryId) {
+        $.ajax({
+            type: 'GET',  // แก้เป็น GET หรือ POST ตามการตั้งค่าใน API
+            url: '/api/products?categoryId=' + categoryId,
+            contentType: 'application/json',
+            success: function (products) {
+                var productList = $('#product-list');
+                productList.empty();
+                products.forEach(function (product) {
+                    productList.append('<div>' + product.ProductName + '</div>');  // แก้ชื่อ property เป็น ProductName
+                });
+            }
+        });
+    }
+</script>
+
+<!-- เพิ่มลิงก์ไปยังไฟล์ CSS ภายนอก -->
+<link rel="stylesheet" href="/css/SidebarFilter.css">

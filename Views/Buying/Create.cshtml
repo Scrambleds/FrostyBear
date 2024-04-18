@@ -1,0 +1,78 @@
+﻿@model FrostyBear.Models.Buying
+@using System.Globalization;
+
+@{
+    CultureInfo us = new CultureInfo("en-US");
+    string theDate = DateTime.Now.Date.ToString("yyyy-MM-dd", us);
+    ViewData["Title"] = "Create";
+}
+@if (TempData["Errormessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["Errormessage"]</div>
+}
+
+<h4>ซื้อของเข้าร้าน @ViewBag.BuyId</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="BuyId" class="control-label"></label>
+                <input asp-for="BuyId" class="form-control" readonly value="@ViewBag.BuyId" />
+                <span asp-validation-for="BuyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SupId" class="control-label"></label>
+                <select asp-for="SupId" class="form-select" asp-items="ViewBag.Sup"></select>
+                <span asp-validation-for="SupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BuyDate" class="control-label"></label>
+                <input type="text" id="BuyDate" asp-for="BuyDate" class="form-control"
+                       value="@theDate" readonly />
+                <span asp-validation-for="BuyDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BuyDocId" class="control-label"></label>
+                <input asp-for="BuyDocId" class="form-control" />
+                <span asp-validation-for="BuyDocId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Saleman" class="control-label"></label>
+                <input asp-for="Saleman" class="form-control" />
+                <span asp-validation-for="Saleman" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BuyRemark" class="control-label"></label>
+                <input asp-for="BuyRemark" class="form-control" />
+                <span asp-validation-for="BuyRemark" class="text-danger"></span>
+
+                <!--สร้าง Input Hidden มาเพื่อบันทึกค่าเดิม ไม่ให้แก้ข้อมูลเป็นค่าว่าง-->
+                <input asp-for="BuyQty" type="hidden" class="form-control" value="0" />
+                <input asp-for="BuyMoney" type="hidden" class="form-control" value="0" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">back to home page</a>
+</div>
+@section Scripts {
+    <script>
+        $('#BuyDate').datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d'
+        })
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

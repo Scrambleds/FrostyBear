@@ -1,0 +1,84 @@
+﻿@model FrostyBear.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <img src="@ViewBag.ImgFile" width="250" class="shadow" />
+        <div class="row mt-2">
+            <div class="col">
+                <a class="btn btn-sm btn-danger" onclick="return confirm('ยืนยันลบรูป')"
+                   asp-action="ImgDelete" asp-route-id="@Model.CustomerId">
+                    <i class="bi bi-x-lg"></i> ลบรูปภาพ
+                </a>
+                <div class="row">
+                    <div class="col-12">
+                        <form method="post" enctype="multipart/form-data" asp-action="ImgUpload">
+                            <input name="theid" type="hidden" value="@Model.CustomerId" />
+                            <input type="file" accept="image/jpeg" id="imgfiles" name="imgfiles"
+                                   class="form-control" required />
+                            <button type="submit" class="btn btn-success mt-4">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CustomerId" />
+            <div class="form-group">
+                <label asp-for="CustomerName" class="control-label"></label>
+                <input asp-for="CustomerName" class="form-control" />
+                <span asp-validation-for="CustomerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerAddress" class="control-label"></label>
+                <input asp-for="CustomerAddress" class="form-control" />
+                <span asp-validation-for="CustomerAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerContact" class="control-label"></label>
+                <input asp-for="CustomerContact" class="form-control" />
+                <span asp-validation-for="CustomerContact" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerUsername" class="control-label"></label>
+                <input asp-for="CustomerUsername" class="form-control" />
+                <span asp-validation-for="CustomerUsername" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerPassword" class="control-label"></label>
+                <input asp-for="CustomerPassword" class="form-control" />
+                <span asp-validation-for="CustomerPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Startdate" type="hidden" class="form-control" />
+                <span asp-validation-for="Startdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Lastlogin" type="hidden" class="form-control" />
+                <span asp-validation-for="Lastlogin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-primary btn-lg active btn-light btn-back" asp-action="Show" asp-route-id="@Model?.CustomerId">Back to profile</a> |
+    <a class="btn btn-primary btn-lg active btn-light btn-back" asp-controller="Home" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

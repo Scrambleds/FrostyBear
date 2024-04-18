@@ -1,0 +1,79 @@
+﻿@model IEnumerable<FrostyBear.ViewModels.EmVM>
+@{
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage;
+    </div>
+}
+
+
+<h1>Employee Page</h1>
+
+@{
+    var stext = ViewBag.stext;
+}
+
+<form asp-controller="Employee" asp-action="Index">
+    <div class="row">
+        <div class="col-sm-6 col-md-8 col-lg-9">
+            <a class="btn btn-primary" asp-action="Create">
+                <i class="bg-info bi-plus-lg"></i> Add new employees
+            </a>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="input-group">
+                <span class="input-group-text">Search</span>
+                <input type="text" name="stext" class="form-control" value="@stext" />
+                <button type="submit" class="btn btn-secondary">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<table width="80%" class="table">
+    <tr>
+        <th></th>
+        <th>Picture</th>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Position</th>
+        <th>Edit</th>
+        <th>Delete</th>
+
+    </tr>
+
+    @{
+        var i = 0;
+    }
+    @foreach (var item in Model)
+    {
+        var pdimg = "/imagem/" + item.EmployeeId + ".png";
+        i++;
+        <tr>
+            <td>@i</td>
+            <td><img src="@pdimg" class="card-img-top img-fluid object-fit-cover" style="height:10vh" alt="..."></td>
+            <td>@item.EmployeeId</td>
+            <td>@item.EmployeeName</td>
+            <td>@item.EmployeeContact</td>
+            <td>@item.EmployeeUsername</td>
+            <td>@item.EmployeePassword</td>
+            <td>@item.PositionName</td>
+            <td class="text-center">
+                <a asp-action="Edit" asp-route-id="@item.EmployeeId">
+                    <i class="bi bi-pencil-square">Edit</i>
+                </a>
+            </td>
+            <td class="text-center">
+                <a asp-action="Delete" asp-route-id="@item.EmployeeId">
+                    <i class="bi bi-x-lg text-danger">Delete</i>
+                </a>
+            </td>
+        </tr>
+    }
+</table>

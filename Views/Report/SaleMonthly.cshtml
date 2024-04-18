@@ -1,0 +1,82 @@
+﻿@using System.Globalization;
+@model IEnumerable<FrostyBear.ViewModels.RepSale>
+
+@{
+    string sDate = "";
+    string eDate = "";
+
+    CultureInfo us = new CultureInfo("en-US");
+    var theMonth = DateTime.Now.Month;
+    var theYear = DateTime.Now.Year;
+    if (ViewBag.sDate != null)
+        sDate = ViewBag.sDate;
+    else
+    {
+        DateOnly thedate = new DateOnly(theYear, theMonth, 1);
+        sDate = thedate.ToString("yyyy-MM-dd", us);
+    }
+
+    if (ViewBag.eDate != null)
+        eDate = ViewBag.eDate;
+    else
+    {
+        DateOnly thedate = new DateOnly(theYear, theMonth, 1).AddMonths(1).AddDays(-1);
+        eDate = thedate.ToString("yyyy-MM-dd", us);
+    }
+}
+
+
+<form asp-controller="Report" asp-action="SaleMonthly">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <h5 class="text-success">Monthly sales report</h5>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6 text-end">
+            <div class="input-group">
+                <span class="input-group-text">Between the dates</span>
+                <input type="text" name="sDate" id="sDate" class="form-control" value="@sDate" />
+                <span class="input-group-text">-</span>
+                <input type="text" name="eDate" id="eDate" class="form-control" value="@eDate" />
+                <button type="submit" class="btn btn-secondary"><i class="bi-search">OK</i></button>
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table table-borderless table-hover">
+    <tr>
+        <th></th>
+        <th colspan="1">Products</th>
+        <th class="text-end">Number of products</th>
+        <th class ="text-end">Total price</th>
+    </tr>
+    @{
+        var i = 0;
+    }
+    @foreach (var item in Model)
+    {
+        i++;
+        <tr>
+            <td>@i</td>
+            <td>@item.PdName</td>
+            <td class ="text-end">@item.CdtlQty</td>
+            <td class="text-end">@item.CdtlMoney</td>
+        </tr>
+    }
+</table>
+<!--กำหนดพื้นที่ Script -->
+@section Scripts {
+    <script>
+        //ระบุ id ที่ต้องการใช้
+        $('#sDate').datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d'
+        })
+        $('#eDate').datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d'
+        })
+
+    </script>
+}

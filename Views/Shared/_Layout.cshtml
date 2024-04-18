@@ -1,0 +1,205 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+
+@{
+    var CartId = HttpContextAccessor.HttpContext.Session.GetString("CartId");
+    var CartMoney = HttpContextAccessor.HttpContext.Session.GetString("CartMoney");
+    var CartQty = HttpContextAccessor.HttpContext.Session.GetString("CartQty");
+    var CusId = HttpContextAccessor.HttpContext.Session.GetString("CusId");
+    var CusName = HttpContextAccessor.HttpContext.Session.GetString("CusName");
+    var EmployeeUsername = HttpContextAccessor.HttpContext.Session.GetString("EmployeeUsername");
+    var EmployeeId = HttpContextAccessor.HttpContext.Session.GetString("EmployeeId");
+    var PositionId = HttpContextAccessor.HttpContext.Session.GetString("PositionId");
+}
+
+<!DOCTYPE html>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FrostyBear</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FrostyBear.styles.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/css/jquery.datetimepicker.min.css" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FrostyBear</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Shop">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="List" asp-route-cusid="@CusId">Purchase history</a>
+                        </li>
+                        <!-- seperate admin menu from shop index-->
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("EmployeeUsername") != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Management
+                                </a>
+                                <ul class="dropdown-menu bg-light">
+                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Product information</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Buying" asp-action="Index">Buy products</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a asp-controller="Admincus" asp-action="Index" class="dropdown-item">Customers</a></li>
+                                    <li><a asp-controller="Employee" asp-action="Index" class="dropdown-item">Employees</a></li>
+                                    <li><a asp-controller="Supplier" asp-action="Index" class="dropdown-item">Supplier</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu bg-light">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Report" asp-action="SaleDaily">
+                                            Daily sales reports
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Report" asp-action="SaleMonthly">
+                                            Monthly sales reports
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        }
+                        <!-- End seperate admin-->
+                        
+                    </ul>
+                </div>
+                <div class="text-end pe-3">
+                    <!--แสดงข้อมูลตะกร้า-->
+                    @if (@HttpContextAccessor.HttpContext.Session.GetString("CartId") != null)
+                    {
+                        //var CartId = HttpContextAccessor.HttpContext.Session.GetString("CartId");
+                        //var CartMoney = HttpContextAccessor.HttpContext.Session.GetString("CartMoney");
+                        //var CartQty = HttpContextAccessor.HttpContext.Session.GetString("CartQty");
+
+                        <a class="btn btn-success opacity-50 text-white mx-2"
+                            asp-controller="Cart" asp-action="Show" asp-route-cartid="@CartId">
+                            @CartId [@CartMoney][@CartQty]
+                        </a>
+                    }
+
+                    @* 
+                   
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("CusId") == null )
+                    {
+                        <a class="btn btn-danger text-white"
+                           asp-controller="ShopLogin" asp-action="Index">
+                            Login
+                        </a>
+
+                    }
+                    else
+                    {
+                        //var CusName = @HttpContextAccessor.HttpContext.Session.GetString("CusName");
+                        //var CusId = @HttpContextAccessor.HttpContext.Session.GetString("CusId");
+                        <a class="btn btn-success" asp-controller="Customer" asp-action="Show" asp-route-id="@CusId">
+                            @CusName
+                        </a>
+                        <a class="btn btn-danger text-white"
+                           asp-controller="ShopLogin" asp-action="Logout"
+                           onclick="return confirm('ออกจากระบบ')">
+                            Logout
+                        </a>
+                    }
+
+
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("EmployeeUsername") != null)
+                    {
+                        <a class="btn btn-success" asp-asp-controller="Admin">
+                            @EmployeeUsername
+                        </a>
+                        <a class="btn btn-danger text-white"
+                           asp-controller="ShopLogin" asp-action="Logout"
+                           onclick="return confirm('ออกจากระบบ')">
+                            Logout
+                        </a>
+                    }
+
+                    <!-- Show username & Logout Button-->
+                    *@
+                    @{
+                        var isUserLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("CusId") != null;
+                        var isAdminLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("EmployeeUsername") != null;
+                    }
+                    @if (!isUserLoggedIn && !isAdminLoggedIn)
+                    {
+                        <a class="btn btn-danger text-white"
+                           asp-controller="ShopLogin" asp-action="Index">
+                            Login
+                        </a>
+                    }
+
+                    @if (isUserLoggedIn)
+                    {
+                        CusName = @HttpContextAccessor.HttpContext.Session.GetString("CusName");
+                        CusId = @HttpContextAccessor.HttpContext.Session.GetString("CusId");
+                        <a class="btn btn-success" asp-controller="Customer" asp-action="Show" asp-route-id="@CusId">
+                            @CusName
+                        </a>
+                        <a class="btn btn-danger text-white"
+                           asp-controller="ShopLogin" asp-action="Logout"
+                           onclick="return confirm('Log out')">
+                            Logout
+                        </a>
+                    }
+
+                    @if (isAdminLoggedIn)
+                    {
+                        EmployeeUsername = @HttpContextAccessor.HttpContext.Session.GetString("EmployeeUsername");
+                        <a class="btn btn-success text-white">
+                            @EmployeeUsername
+                        </a>
+                        <a class="btn btn-danger text-white"
+                           asp-controller="ShopLogin" asp-action="Logout"
+                           onclick="return confirm('Log out')">
+                            Logout
+                        </a>
+                    }
+                   
+                    <!-- End Show username-->
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+
+            @RenderBody()
+        </main>
+    </div>
+   
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - FrostyBear - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.datetimepicker.full.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

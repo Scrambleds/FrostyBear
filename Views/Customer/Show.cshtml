@@ -1,0 +1,70 @@
+﻿@model FrostyBear.Models.Customer
+
+@{
+    ViewData["Title"] = "Show";
+}
+<style>
+    .btn-back {
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<div>
+    <h1>Proflie</h1>
+    <hr />
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <img src="@ViewBag.ImgFile" width="250" class="shadow" />
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <dl class="row">
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.CustomerName)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.CustomerName)
+                </dd>
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.CustomerAddress)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.CustomerAddress)
+                </dd>
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.CustomerContact)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.CustomerContact)
+                </dd>
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.CustomerUsername)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.CustomerUsername)
+                </dd>
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.CustomerPassword)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.CustomerPassword)
+                </dd>
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.Startdate)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.Startdate)
+                </dd>
+                <dt class="row-cols-auto">
+                    @Html.DisplayNameFor(model => model.Lastlogin)
+                </dt>
+                <dd class="row-cols-auto">
+                    @Html.DisplayFor(model => model.Lastlogin)
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-primary btn-lg active btn-light btn-back" asp-action="Edit" asp-route-id="@Model?.CustomerId">Edit</a> |
+    <a class="btn btn-secondary btn-lg active btn-light btn-back" asp-controller="Home" asp-action="Index">Back to List</a>
+</div>

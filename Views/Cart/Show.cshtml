@@ -1,0 +1,88 @@
+﻿@using FrostyBear.ViewModels;
+@model dynamic
+@using System.Globalization;
+
+@{
+	CultureInfo us = new CultureInfo("en-us");
+}
+<div class="container">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-warning">@TempData["ErrorMessage"]</div>
+    }
+    @{
+        string cartcf = "";
+    }
+</div>
+<!--อ่านค่าจาก Model เป็น Object-->
+@foreach (Cart master in Model.Master)
+{
+    cartcf = master.CartCf;
+    <div class="card bg-light">
+        <div class="card-body">
+            <h4 class="card-title text-primary opacity-75">Order number @master.CartId</h4>
+            <h5 class="card-subtitle mt-2 text-muted">
+                Order date @master.CartDate.Value.ToString("yyyy-MMM-dd", us)
+            </h5>
+            <div class="text-danger text-end">
+                Number of products @master.CartQty Total price  @master.CartMoney.Value.ToString("#,###.##") Baht
+            </div>
+            <hr />
+            @if (cartcf != "Y")
+            {
+            <a class="btn btn-danger" asp-controller="Cart" asp-action="Delete"
+               asp-route-cartid="@master.CartId" onclick="return confirm('Confirm to delete cart')">
+                <i class="bi-cart-x-fill"></i> Delete cart
+            </a>
+            <a class="btn btn-primary" asp-controller="Cart" asp-action="Confirm"
+               asp-route-cartid="@master.CartId" onclick="return confirm('Confirm order')">
+                <i class="bi-currency-dollar"></i> Confirm order
+            </a>
+            }
+        </div>
+    </div>
+}
+<table class="table table-hover mt-3 ">
+    <tr class="bg-light">
+        <td></td>
+        <td>Product code</td>
+        <td>Product name</td>
+        <td class="text-end">Unit price</td>
+        <td class="text-center">quantity</td>
+        <td class="text-end">Total price</td>
+        <td></td>
+    </tr>
+    @{
+        var i = 0;
+    }
+    @foreach (CtdVM detail in Model.Detail)
+    {
+        i++;
+        <tr>
+            <td>@i</td>
+            <td>
+                <a asp-action="Show" asp-controller="Product" asp-route-id="@detail.ProductId">
+                    @detail.ProductId
+                </a>
+            </td>
+            <td>@detail.ProductName</td>
+            <td class="text-end">@detail.CdtlPrice.Value.ToString("#,###.##")</td>
+            <td class="text-center">@detail.CdtlQty</td>
+            <td class="text-end">@detail.CdtlMoney.Value.ToString("#,###.##")</td>
+            <td class="text-center">
+                @if (cartcf != "Y")
+                {
+                    <form asp-controller="Cart" asp-action="DeleteDtl" method="post"
+                    onsubmit="return confirm('Confirm deletion of selected products.')">
+                    <input type="hidden" name="pdid" value="@detail.ProductId" />
+                    <input type="hidden" name="cartid" value="@detail.CartId" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi-x-lg text-danger"></i> delete
+                    </button>
+                </form>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,86 @@
+﻿@model IEnumerable<FrostyBear.ViewModels.BuyVM>
+@using System.Globalization;
+@{
+    CultureInfo us = new CultureInfo("en-US");
+    string theDate;
+    //ถ้าไม่ได้ระบุวันให้เป็นวันปัจจุบัน
+    if (ViewBag.theDate != null)
+        theDate = ViewBag.theDate;
+    else
+        theDate = DateTime.Now.Date.ToString("yyyy-MM-dd", us);
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["ErrorMessage"]</div>
+}
+
+<h1 class="text-success">Buy products</h1>
+
+<form asp-controller="Buying" asp-action="Index">
+    <div class="row">
+        <div class="col-sm-6 col-md-8 col-lg-9">
+            <a class="btn btn-primary" asp-action="Create">
+                <i class="bi bi-plus-lg"></i>Add
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3 text-end">
+            <div class="input-group">
+                <span class="input-group-text">Date</span>
+                <input type="text" name="theDate" id="theDate" class="form-control" value="@theDate" />
+                <button type="submit" class="btn btn-secondary"><i class="bi-search">OK</i></button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-borderless table-hover">
+    <tr>
+        <th></th>
+        <th>Buying number</th>
+        <th colspan="2">Supplier</th>
+        <th>Date</th>
+        <th>seller</th>
+        <th>Ref documents</th>
+        <th class="text-end">Number of products</th>
+        <th class="text-center">Total price</th>
+    </tr>
+    @{
+        var i = 0;
+    }
+    @foreach (var item in Model)
+    {
+        i++;
+        <tr>
+            <td>@i</td>
+            <td>
+                <a asp-action="Show" asp-route-buyid="@item.BuyId">
+                    @item.BuyId
+                </a>
+            </td>
+            <td>@item.SupId</td>
+            <td>@item.SupName</td>
+            <td>@item.BuyDate.Value.ToString("yyyy-MMM-dd")</td>
+            <td>@item.Saleman</td>
+            <td>@item.BuyDocId</td>
+            <td class="text-end">@item.BuyQty</td>
+            <td class="text-end">@item.BuyMoney</td>
+        </tr>
+    }
+</table>
+
+<!--กำหนดพื้นที่ Script -->
+@section Scripts {
+    <script>
+        //ระบุ id ที่ต้องการใช้
+        $('#theDate').datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d'
+        })
+
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

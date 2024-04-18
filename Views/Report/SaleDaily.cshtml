@@ -1,0 +1,65 @@
+﻿@using System.Globalization;
+@model IEnumerable<FrostyBear.ViewModels.RepSale>
+
+@{
+    CultureInfo us = new CultureInfo("en-US");
+    string theDate;
+    //ถ้าไม่ได้ระบุวันให้เป็นวันปัจจุบัน
+    if (ViewBag.theDate != null)
+        theDate = ViewBag.theDate;
+    else
+        theDate = DateTime.Now.Date.ToString("yyyy-MM-dd", us);
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["ErrorMessage"]</div>
+}
+<form asp-controller="Report" asp-action="SaleDaily">
+    <div class="row">
+        <div class="col-sm-6 col-md-8 col-lg-9">
+            <h5 class="text-success">Daily sales report</h5>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3 text-end">
+            <div class="input-group">
+                <span class="input-group-text">Date</span>
+                <input type="text" name="theDate" id="theDate" class="form-control" value="@theDate" />
+                <button type="submit" class="btn btn-secondary"><i class="bi-search">OK</i></button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-borderless table-hover">
+    <tr>
+        <th></th>
+        <th colspan="2">Products</th>
+        <th class="text-end">Number of products</th>
+        <th class="text-center">Total price</th>
+    </tr>
+    @{
+        var i = 0;
+    }
+    @foreach (var item in Model)
+    {
+        i++;
+        <tr>
+            <td>@i</td>
+            <td>@item.PdId</td>
+            <td>@item.PdName</td>
+            <td class="text-end">@item.CdtlQty</td>
+            <td class="text-end">@item.CdtlMoney</td>
+        </tr>
+    }
+</table>
+<!--กำหนดพื้นที่ Script -->
+@section Scripts {
+    <script>
+        //ระบุ id ที่ต้องการใช้
+        $('#theDate').datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d'
+        })
+
+    </script>
+}

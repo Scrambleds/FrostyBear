@@ -1,0 +1,66 @@
+﻿@model FrostyBear.Models.BuyDtl
+@{
+    ViewData["Title"] = "CreateDtl";
+}
+@if (TempData["Errormessage"] != null)
+{
+    <div class="alert alert-warning">@TempData["Errormessage"]</div>
+}
+<h4>Add products to documents @ViewBag.BuyId</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateDtl" onsubmit="calmoney()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="BuyId" class="control-label"></label>
+                <input asp-for="BuyId" class="form-control" value="@ViewBag.BuyId" readonly />
+                <span asp-validation-for="BuyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PdId" class="control-label"></label>
+                <select asp-for="PdId" class="form-select" asp-items="ViewBag.PdId"></select>
+                <span asp-validation-for="PdId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BdtlQty" class="control-label"></label>
+                <input type="number" asp-for="BdtlQty" id="BdtlQty" class="form-control"
+                       onchange="calmoney()" />
+                <span asp-validation-for="BdtlQty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BdtlPrice" class="control-label"></label>
+                <input type="number" asp-for="BdtlPrice" id="BdtlPrice" class="form-control"
+                       onchange="calmoney()" />
+                <span asp-validation-for="BdtlPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BdtlMoney" class="control-label"></label>
+                <input asp-for="BdtlMoney" class="form-control" id="BdtlMoney" readonly />
+                <span asp-validation-for="BdtlMoney" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Show" asp-route-buyid="@ViewBag.BuyId">Back to home page</a>
+</div>
+
+@section Scripts {
+    <script>
+        function calmoney() {
+            var qty = document.getElementById("BdtlQty").value * 1;
+            var price = document.getElementById("BdtlPrice").value * 1;
+            var money = qty * price;
+            document.getElementById("BdtlMoney").value = money;
+        }
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

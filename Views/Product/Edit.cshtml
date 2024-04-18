@@ -1,0 +1,93 @@
+﻿@model FrostyBear.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage;
+    </div>
+}
+
+<h1>Edit</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <img src="@ViewBag.ImgFile" width="250" class="shadow" />
+        <div class="row mt-2">
+            <div class="col">
+                <a class="btn btn-sm btn-danger" onclick="return confirm('ยืนยันลบรูป')"
+                   asp-action="ImgDelete" asp-route-id="@Model.ProductId">
+                    <i class="bi bi-x-lg"></i> ลบรูปภาพ
+                </a>
+                <div class="row">
+                    <div class="col-12">
+                        <form method="post" enctype="multipart/form-data" asp-action="ImgUpload">
+                            <input name="theid" type="hidden" value="@Model.ProductId" />
+                            <input type="file" accept="image/png" id="imgfiles" name="imgfiles"
+                                   class="form-control" required />
+                            <button type="submit" class="btn btn-success mt-4">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductPrice" class="control-label"></label>
+                <input asp-for="ProductPrice" class="form-control" />
+                <span asp-validation-for="ProductPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandId" class="control-label"></label>
+                <select asp-for="BrandId" class="form-control" asp-items="ViewBag.Brand"></select>
+                <span asp-validation-for="BrandId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Detail" class="control-label"></label>
+                <input asp-for="Detail" class="form-control" />
+                <span asp-validation-for="Detail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductCost" class="control-label"></label>
+                <input asp-for="ProductCost" class="form-control" />
+                <span asp-validation-for="ProductCost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductStock" class="control-label"></label>
+                <input asp-for="ProductStock" class="form-control" />
+                <span asp-validation-for="ProductStock" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-primary btn-lg active btn-light btn-back" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

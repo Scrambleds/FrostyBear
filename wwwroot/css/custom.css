@@ -1,0 +1,19 @@
+﻿body {
+    height: 200vh;
+
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 60px 1fr;
+}
+
+.header {
+    background-color: #808080;
+}
+
+.sidebar{
+    background-color: #808080;
+}
+
+.main {
+    background-color: #000000;
+}
